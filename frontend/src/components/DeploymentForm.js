@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Button,
   FormControl,
@@ -10,6 +9,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { getClients, getPackages, createDeployment } from "../api";
 
 const DeploymentForm = () => {
   const [clients, setClients] = useState([]);
@@ -18,35 +18,29 @@ const DeploymentForm = () => {
   const [selectedPackage, setSelectedPackage] = useState("");
 
   useEffect(() => {
-    const fetchClientsAndPackages = async () => {
+    const fetchData = async () => {
       try {
-        const clientsResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}clients/`
-        );
-        const packagesResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}packages/`
-        );
-
-        setClients(clientsResponse.data);
-        setPackages(packagesResponse.data);
+        const clientsRes = await getClients();
+        const packagesRes = await getPackages();
+        setClients(clientsRes.data);
+        setPackages(packagesRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchClientsAndPackages();
+    fetchData();
   }, []);
 
   const handleDeployment = async () => {
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}deployments/`, {
+      await createDeployment({
         client: selectedClient,
         package: selectedPackage,
         status: "pending",
       });
 
       alert("Deployment created successfully!");
-      // Reset form
       setSelectedClient("");
       setSelectedPackage("");
     } catch (error) {

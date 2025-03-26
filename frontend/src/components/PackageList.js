@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Table,
   TableBody,
@@ -9,23 +8,15 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { getPackages } from "../api";
 
 const PackageList = () => {
   const [packages, setPackages] = useState([]);
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}packages/`
-        );
-        setPackages(response.data);
-      } catch (error) {
-        console.error("Error fetching packages:", error);
-      }
-    };
-
-    fetchPackages();
+    getPackages()
+      .then((response) => setPackages(response.data))
+      .catch((error) => console.error("Error fetching packages:", error));
   }, []);
 
   return (

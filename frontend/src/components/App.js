@@ -9,10 +9,10 @@ import {
   Button,
 } from "@mui/material";
 
-import ClientList from "./components/ClientList";
-import PackageList from "./components/PackageList";
-import DeploymentForm from "./components/DeploymentForm";
-import DeploymentHistory from "./components/DeploymentHistory";
+import ClientList from "./ClientList";
+import PackageList from "./PackageList";
+import DeploymentForm from "./DeploymentForm";
+import DeploymentHistory from "./DeploymentHistory";
 
 function App() {
   return (

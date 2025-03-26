@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Table,
   TableBody,
@@ -13,6 +12,7 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
+import { getClients } from "../api";
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
@@ -20,18 +20,9 @@ const ClientList = () => {
   const [osFilter, setOsFilter] = useState("all");
 
   useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}clients/`
-        );
-        setClients(response.data);
-      } catch (error) {
-        console.error("Error fetching clients:", error);
-      }
-    };
-
-    fetchClients();
+    getClients()
+      .then((response) => setClients(response.data))
+      .catch((error) => console.error("Error fetching clients:", error));
   }, []);
 
   const filteredClients = clients.filter(

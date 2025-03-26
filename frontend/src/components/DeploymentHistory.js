@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Table,
   TableBody,
@@ -10,23 +9,41 @@ import {
   Paper,
   Chip,
 } from "@mui/material";
+import { getDeployments } from "../api";
 
 const DeploymentHistory = () => {
   const [deployments, setDeployments] = useState([]);
 
   useEffect(() => {
-    const fetchDeployments = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}deployments/`
-        );
-        setDeployments(response.data);
-      } catch (error) {
-        console.error("Error fetching deployments:", error);
-      }
+    // Initial fetch
+    getDeployments()
+      .then((res) => setDeployments(res.data))
+      .catch((err) => console.error("Error fetching deployments:", err));
+
+    // WebSocket connection
+    const ws = new WebSocket("ws://localhost:8000/ws/deployments/");
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("🔄 WebSocket Message:", data); // 👈
+
+      setDeployments((prev) =>
+        prev.map((dep) =>
+          dep.id === data.id
+            ? { ...dep, status: data.status, updated_at: data.updated_at }
+            : dep
+        )
+      );
     };
 
-    fetchDeployments();
+    ws.onerror = (err) => console.error("WebSocket error:", err);
+    ws.onclose = () => console.log("WebSocket disconnected.");
+
+    ws.onopen = () => {
+      console.log("WebSocket connected.");
+    };
+
+    return () => ws.close(); // Cleanup
   }, []);
 
   const getStatusColor = (status) => {
