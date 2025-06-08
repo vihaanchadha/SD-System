@@ -49,11 +49,12 @@ REST Framework to expose these components through RESTful API endpoints. I wante
 ensure both the frontend and client-side scripts interacted with the system in a simple manner.
 
 Each endpoint has its own function as follows:
-   ● POST /clients/ to register clients
-   ● PATCH /clients/<id>/ to update client check-ins
-   ● GET /deployments/ to retrieve deployment status
-   ● PATCH /deployments/<id>/ to update deployment status
-   ● POST /deployments/ to create new deployments
+
+   - POST /clients/ to register clients
+   - PATCH /clients/<id>/ to update client check-ins
+   - GET /deployments/ to retrieve deployment status
+   - PATCH /deployments/<id>/ to update deployment status
+   - POST /deployments/ to create new deployments
 
 These endpoints and structures allowed me to handle all types of user flows from both the UI and
 client side. I then proceeded to integrate Celery. The Celery worker allowed me to reduce the
@@ -68,10 +69,10 @@ provide easy access to all the routes. I implemented filtering options for clien
 using MUI’s Select components. Each data section is presented in tables for readability, using
 chips and tags to color-code statuses. I managed routing through React Router and each major
 view was captured in its own component:
-   ● ClientList.js renders and filters client data
-   ● PackageList.js displays available packages
-   ● DeploymentForm.js handles new deployments
-   ● DeploymentHistory.js uses WebSockets to reflect live deployment status
+   - ClientList.js renders and filters client data
+   - PackageList.js displays available packages
+   - DeploymentForm.js handles new deployments
+   - DeploymentHistory.js uses WebSockets to reflect live deployment status
 
 There were a few challenges I faced. The first was with the Celery and Redis setup. More
 specifically, ensuring Celery workers responded correctly, especially in simulating delayed
@@ -84,11 +85,11 @@ correctly register, poll, and update deployments was challenging. I had to rewor
 only unclaimed deployments, then later added a centralized claim approach as a bonus.
 
 If I had more time, I would implement the following:
-   ● Telemetry Data Collection: The client script could POST CPU/memory usage
+   - Telemetry Data Collection: The client script could POST CPU/memory usage
    periodically, which the UI could display as live graphs.
-   ● Deployment Logging System: Add a DeploymentLog model to record time stamped
+   - Deployment Logging System: Add a DeploymentLog model to record time stamped
    status updates, errors, and messages for auditing.
-   ● Priority-Based Deployments: Extend the Deployment model with a priority field and
+   - Priority-Based Deployments: Extend the Deployment model with a priority field and
    have the client script fetch and install based on priority.
-   ● Authentication: Secure the API using token-based auth to ensure only valid clients can
+   - Authentication: Secure the API using token-based auth to ensure only valid clients can
    register and poll
